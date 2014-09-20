@@ -1,0 +1,18 @@
+{
+  "node_name": "hub",
+  "datacenter": "dc1",
+  "domain": "local.microcloud.io",
+  "server": true,
+  "bootstrap": true,
+  "data_dir": "/consul-data",
+  "log_level": "INFO",
+  "client_addr": "0.0.0.0",
+  "ports": {
+    "dns": 53,
+    "http": 3000
+  },
+  "can": {
+    "handle": { "nested": ["items", 2] }
+  }
+}
+
