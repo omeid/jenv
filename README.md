@@ -44,7 +44,12 @@ $ cat example.json
   }
 }
 
-$ csl_can='{ "handle": ["array", "here"], "param": true }' csl_node_name='"website-1"' csl_domain='"example.com"' bin/jenv example.json csl_
+$ #Pay attention to the strings quote.
+$ csl_can='{ "handle": ["array", "here"], "param": true }' \
+> csl_node_name='"website-1"'                              \
+> csl_domain='"example.com"'                               \
+> jenv example.json csl_
+
 {
   "node_name": "website-1",
   "datacenter": "dc1",
