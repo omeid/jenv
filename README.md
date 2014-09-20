@@ -1,4 +1,4 @@
-# Jenvy v0.1
+# Jenv v0.1
 
 Super simple tool to replace JSON values with Environment Variables. I needed for Docker and a reason to do brush up my ancient and super rusty C skills.
 
@@ -6,7 +6,7 @@ Super simple tool to replace JSON values with Environment Variables. I needed fo
 # Usage:
 
 ```sh
-$ bin/jenv 
+$ jenv 
 Jenv - version v0.1
 
 Jenv is a mini tool to replace JSON nodes.
