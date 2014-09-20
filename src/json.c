@@ -49,7 +49,10 @@ void replace_node_value(char *json, const int json_size, const char *key, const 
 
       v_start = j;
 
-      int inception = 0; // Implemnt this!
+      int inception = 0; // Target object nested items housekeeping.
+                         // Only objects of the same type.
+                         // Doesn't apply to "string".
+
       bool is_string = false;
 
       while(json[j++]) {
@@ -62,7 +65,13 @@ void replace_node_value(char *json, const int json_size, const char *key, const 
 
         if(c == '\\'){
           const char n = json[j+1];
+          
+          if(n == 'u') {
+            j = j+4;
+            continue;
+          }
 
+          /* We don't care for other cases.
           if(
               n  == '"'  ||  
               n  == '\\' ||
@@ -73,15 +82,14 @@ void replace_node_value(char *json, const int json_size, const char *key, const 
               n  == 'r'  ||
               n  == 't'
             ) 
-          {
-            j++;
-            continue;
-          }
+          { */
 
-          if(n == 'u') {
-            j = j+4;
+            j++; //Just escape next char.
             continue;
-          }
+           /*
+           }
+           */
+
         }
 
         if(c != '"' && c == v_opening_tag){
