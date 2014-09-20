@@ -25,7 +25,7 @@ Output:    The result is printed to standard output.
 ## Example:
 
 ```sh
-$ cat test.json 
+$ cat example.json 
 {
   "node_name": "hub",
   "datacenter": "dc1",
@@ -44,15 +44,11 @@ $ cat test.json
   }
 }
 
-$ csl_node_name="website-1" csl_domain="example.com" jenv test.json csl_
+$ csl_can='{ "handle": ["array", "here"], "param": true }' csl_node_name='"website-1"' csl_domain='"example.com"' bin/jenv example.json csl_
 {
-  "node_name": website-1
-  "node_name": "hub",
+  "node_name": "website-1",
   "datacenter": "dc1",
-  "domain": example.com
-  "node_name": "hub",
-  "datacenter": "dc1",
-  "domain": "local.microcloud.io",
+  "domain": "example.com",
   "server": true,
   "bootstrap": true,
   "data_dir": "/consul-data",
@@ -62,13 +58,10 @@ $ csl_node_name="website-1" csl_domain="example.com" jenv test.json csl_
     "dns": 53,
     "http": 3000
   },
-  "can": {
-    "handle": { "nested": ["items", 2] }
-  }
+  "can": { "handle": ["array", "here"], "param": true }
 }
 
-$ _ 
-
+$ 
 ```
 
 # Limitations

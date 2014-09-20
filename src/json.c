@@ -53,51 +53,49 @@ void replace_node_value(char *json, const int json_size, const char *key, const 
       bool is_string = false;
 
       while(json[j++]) {
-        switch(json[j]) {
 
-          case '\\':
-            switch(json[j+1]) {
+        const char c = json[j];
 
-              case '"' : 
-              case '\\': 
-              case '/' : 
-              case 'b' :
-              case 'f' :
-              case 'n' :
-              case 'r' :
-              case 't' :
-                j++;
-                break;
+        if(c == '"' &&  c != v_closing_tag) is_string = !is_string;
+        
+        if(is_string) continue;
 
-              case 'u' :
-                j = j+4;
-                break;
-            }
-            break;
+        if(c == '\\'){
+          const char n = json[j+1];
 
+          if(
+              n  == '"'  ||  
+              n  == '\\' ||
+              n  == '/'  ||
+              n  == 'b'  ||
+              n  == 'f'  ||
+              n  == 'n'  ||
+              n  == 'r'  ||
+              n  == 't'
+            ) 
+          {
+            j++;
+            continue;
+          }
 
-          case '"':
-            is_string = v_closing_tag != json[j] && !is_string;
-            break;
-
-          default:
-            if(!is_string && (json[j] == v_closing_tag || json[j] == v_opening_tag))
-              break;
+          if(n == 'u') {
+            j = j+4;
+            continue;
+          }
         }
-        if(json[j] == v_opening_tag){
+
+        if(c != '"' && c == v_opening_tag){
           inception++;
           continue;
         }
 
-        if(json[j] == v_closing_tag) {
+        if(c == v_closing_tag){
           if(inception) {
             inception--;
             continue;
           }
-          if(!is_string){
-            v_end = j;
-            break;
-          }
+          v_end = j + 1;
+          break;
         }
       }
 
@@ -107,10 +105,9 @@ void replace_node_value(char *json, const int json_size, const char *key, const 
         Fatal("Can't allocate memory.");
       };
 
-      int cur = 0;
       strncpy(new_json, json, v_start);
       strcat(new_json, value);
-      strcat(new_json, json+v_end+1);
+      strcat(new_json, json+v_end);
 
       strcpy(json, new_json);
     }
