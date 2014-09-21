@@ -21,15 +21,25 @@ PrintHelp() {
 
 case "$1" in
   build)
-    echo "Building..."
-    gcc -std=c99 src/jenv.c -fwhole-program -o bin/jenv && strip -s bin/jenv
-    echo "Done."
-    ;;
+        echo "Building..."
+        gcc -std=c99 src/jenv.c -fwhole-program -o bin/jenv && strip -s bin/jenv
+        echo "Done."
+  ;;
   install)
-    cp src/jenv /bin/
-    ;;
+        cp src/jenv /bin/
+  ;;
+  test)
+        csl_can='{ "handle": ["array", "here"], "param": true }'    \
+        csl_node_name='"website-1"'                                 \
+        csl_domain='"example.com"'                                  \
+        csl_datacenter='"d1"'                                       \
+        csl_server=false                                            \
+        bin/jenv test/input.json csl_ |       \
+        diff --ignore-all-space -q \
+        - test/expect.json 
+        && echo "Test passed." || echo "failed."
+  ;;
   *)
     echo "Invalid command."
     PrintHelp
   esac
-
