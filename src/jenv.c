@@ -40,14 +40,15 @@ int main(int argc, char **argv, char **envp)
   //Grab the file name
   const char* file_path = *argv++;
 
+  if(file_path == "help"){
+    printHelp();
+  }
+
   const char* prefix = (argc > 2) ? *argv++ : DEFAULT_PREFIX;
   const int   prefix_len = strlen(prefix); //Well, array starts from 0, and then it's null termnated                                            // no idea why there is an extra space at the end.
 
   for(int i = 0; i < prefix_len; i++) {
-    if(isspace(prefix[i])){
-      printHelp();
-      Fatal("Invalid Prefix.");
-    }
+    if(isspace(prefix[i])) Fatal("Invalid Prefix. See `jenv help`");
   }
 
   FILE *f;
@@ -57,7 +58,7 @@ int main(int argc, char **argv, char **envp)
 
   f = fopen(file_path, "rb");
   if(f == NULL) {
-    printf("\tFile passed: %s\n", file_path);
+    fprintf(stderr, "\tFile passed: %s\n", file_path);
     Fatal("Failed to open file.");
   }
 
