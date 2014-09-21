@@ -17,8 +17,9 @@ void printHelp() {
   printf("Usage:  jenv filename [Prefix]\n\n");
 
 
+  printf("help:      Show this help message.\n\n");
   printf("filename:  The JSON file path. The file is not altered.\n");
-  printf("           This parameter is required.\n");
+  printf("           This parameter is required.\n\n");
   printf("Prefix:    The env prefix that holds replacement values.\n");
   printf("           Must be valid shell variable name. No whitespace.\n");
   printf("           Default: '%s'.\n\n", DEFAULT_PREFIX);
@@ -40,8 +41,9 @@ int main(int argc, char **argv, char **envp)
   //Grab the file name
   const char* file_path = *argv++;
 
-  if(file_path == "help"){
+  if(0 == strcoll(file_path, "help")){
     printHelp();
+    return 0;
   }
 
   const char* prefix = (argc > 2) ? *argv++ : DEFAULT_PREFIX;

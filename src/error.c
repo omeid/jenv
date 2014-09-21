@@ -7,7 +7,7 @@
 #include <stdlib.h>
 
 void Fatal(const char *err) {
-  fprintf(stderr, "\n\tERROR: %s", err);
+  fprintf(stderr, "\n\tERROR: %s\n", err);
   exit(1);
 }
 #endif /* ERROR_FATAL_H */
