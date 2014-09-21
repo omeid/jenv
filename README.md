@@ -70,6 +70,24 @@ $ csl_can='{ "handle": ["array", "here"], "param": true }' \
 $ 
 ```
 
+# Building
+
+## Dependencies
+* libc
+Yup, that is it.
+
+## How?
+just run 
+```sh
+$ ./builder build && ./builder install
+```
+> You may need to run `./builder install` with `sudo`.
+
+# Testing
+
+There is a flimsy test for now, just run `./builder test`.
+
+
 # Limitations
 
 jenv isn't a complete JSON parser, it simply helps replace root nodes using environment variables.
