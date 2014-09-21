@@ -92,7 +92,7 @@ $ ./builder build && ./builder install
 ```
 > You may need to run `./builder install` with `sudo`.
 
-# Testing
+### Testing
 
 There is a flimsy test for now, just run `./builder test`.
 
