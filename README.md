@@ -1,4 +1,5 @@
-# Jenv v0.1
+# Jenv `/d͡ʒˈɪnv/`
+Version v0.1 
 
 Super simple tool to replace JSON values with Environment Variables. I needed for Docker and a reason to do brush up my ancient and super rusty C skills.
 
