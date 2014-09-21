@@ -6,8 +6,8 @@
 #include "json.c"
 
 const char DEFAULT_PREFIX[] = "jenv_";
-const int  BLOCK_SIZE = 1024;
-const int  NUM_TOKENS = 100;
+const int  BLOCK_SIZE       = 1024;
+const int  NUM_TOKENS       = 100;
 
 void printHelp() {
 
@@ -47,13 +47,12 @@ int main(int argc, char **argv, char **envp)
     if(isspace(prefix[i])){
       printHelp();
       Fatal("Invalid Prefix.");
-
-    };
+    }
   }
 
   FILE *f;
   char *json;
-  int filesize = 0;
+  int  filesize;
 
 
   f = fopen(file_path, "rb");
@@ -79,32 +78,29 @@ int main(int argc, char **argv, char **envp)
   while(*envp) {
 
     char* kvp = *envp++;
-    if(kvp == NULL) {
-      break;
-    }
+
+    //if kvp is empty, give up.
+    if(kvp == NULL) break;
 
     int cur  = 0;
-    int l = strlen(kvp);
 
+    //if key value pair is smaller than prefix, escape.
+    if(strlen(kvp) < prefix_len) continue;
 
-    if(l < prefix_len) {
-      //key value pair is smaller than prefix, escape.
-      continue;
-    }
 
     char* key_prefixed = strtok(kvp, "="); 
     int key_len = strlen(key_prefixed);
-    if(key_len < prefix_len) {
-      //key is smaller than prefix, escape.
-      continue;
-    }
+
+    //if key is smaller than prefix, escape.
+    if(key_len < prefix_len) continue;
+
 
     for(int i = 0; i < prefix_len; i++) {
-      if(key_prefixed[i] != prefix[i]){
-        goto NEXT;
-      }
+      if(key_prefixed[i] != prefix[i]) goto NEXT;
     }
 
+    //Create a scope to avoid 'goto' jump into
+    //a scope with "undefined" vars.
     {
       char key[key_len - prefix_len + 1];
       key_len = key_len - prefix_len;
@@ -115,7 +111,8 @@ int main(int argc, char **argv, char **envp)
       int value_len = strlen(value); //Just for consistency.
       replace_node_value(json, filesize, key, key_len, value, value_len);
     }
-    NEXT:
+
+NEXT:
     ; //Stop label at end of compound statement error. /* */
   }
   printf(json);
