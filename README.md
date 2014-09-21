@@ -93,6 +93,41 @@ There is a flimsy test for now, just run `./builder test`.
 jenv isn't a complete JSON parser, it simply helps replace root nodes using environment variables.
 However, it dose not chock on nested `objects` or `arrays` and can hanlde escaping.
 
+# Caveat
+
+You _cannot_ read from a file and write to it in the same pipeline. So this is not possible:
+
+### Problem: 
+
+```sh
+$ #Bad example. This won't work. 
+$ jsenv config/app.json my_prefix > config/app.json
+$
+$ # Nor will this or any other combination. Except [sponage from moreutials](http://manpages.debian.org/cgi-bin/man.cgi?query=sponge)
+$ jsenv config/app.json | tee config/app.json
+```
+Read more on [File Redirection](http://mywiki.wooledge.org/BashGuide/InputAndOutput#File_Redirection) and this [Pitiful specifically](http://mywiki.wooledge.org/BashPitfalls#cat_file_.7C_sed_s.2Ffoo.2Fbar.2F_.3E_file).
+
+### Solution:
+  Consider using _template files_ this also means that unprocessed json files are never servered to your services.
+  And you can easily chose want should be processed by prefixing it.
+
+  Example:
+```sh
+$ ls config
+app.json.jenv consul.json.jenv
+
+$ for json in config/*.jenv; do
+> jenv $js cnsl_ > ${js%%\.jenv};
+> done;
+$ ls *
+
+$ ls config
+app.json app.json.jenv console.json consul.json.jenv
+
+$ rm config/*.jenv #optionally delete _templates_.
+```
+
 
 # Contribution
 Just send me a pull request or if it is design change or adding features you could consider openning an issue first.

@@ -60,8 +60,8 @@ void replace_node_value(char *json, int json_size, const char *key, const int ke
     v_start = j;
 
     int inception = 0; // Target object nested items book-keeping.
-                       // Only objects of the same type.
-                       // Doesn't apply to "string".
+    // Only objects of the same type.
+    // Doesn't apply to "string".
 
     bool is_string = false;
 
@@ -88,8 +88,8 @@ void replace_node_value(char *json, int json_size, const char *key, const int ke
       //do book keeping then next.
       // c != '"' because strings can't be nested.
       if(c != '"' && c == v_opening_tag) {
-          inception++;
-          continue;
+        inception++;
+        continue;
       }
 
 
