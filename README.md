@@ -115,9 +115,11 @@ Read more on [File Redirection](http://mywiki.wooledge.org/BashGuide/InputAndOut
 
 > [*sponge(1)](http://man.cx/sponge) is part of [moreutials](https://joeyh.name/code/moreutils/).
 
-##### Solution:
+
+         
+#### Solution:
   Consider using _template files_ this also means that unprocessed json files are never servered to your services.
-  And you can easily chose want should be processed by prefixing it.
+  And you can easily chose what should be processed.
 
   Example:
 ```sh
@@ -127,13 +129,14 @@ app.json.jenv consul.json.jenv
 $ for json in config/*.jenv; do
 > jenv $js prefix_ > ${js%%\.jenv};
 > done;
-$ ls *
 
 $ ls config
 app.json app.json.jenv console.json consul.json.jenv
 
 $ rm config/*.jenv #optionally delete _templates_.
 ```
+
+You can of course, use any other suffix instead of `.jenv`.
 
 
 ### Contribution
