@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
+#include <stdio.h>
 
 #include "error.c"
 #include "json.c"
@@ -58,7 +59,7 @@ int main(int argc, char **argv, char **envp)
   int  filesize;
 
 
-  f = fopen(file_path, "rb");
+  f = fopen(file_path, "r");
   if(f == NULL) {
     fprintf(stderr, "\tFile passed: %s\n", file_path);
     Fatal("Failed to open file.");

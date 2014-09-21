@@ -1,0 +1,16 @@
+{
+  "node_name": "website-1",
+  "datacenter": "d1",
+  "domain": "example.com",
+  "server": false,
+  "bootstrap": true,
+  "data_dir": "/consul-data",
+  "log_level": "INFO",
+  "client_addr": "0.0.0.0",
+  "ports": {
+    "dns": 53,
+    "http": 3000
+  },
+  "can": { "handle": ["array", "here"], "param": true }
+}
+

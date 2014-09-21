@@ -34,9 +34,9 @@ case "$1" in
         csl_domain='"example.com"'                                  \
         csl_datacenter='"d1"'                                       \
         csl_server=false                                            \
-        bin/jenv test/input.json csl_ |       \
-        diff --ignore-all-space -q \
-        - test/expect.json 
+        bin/jenv test/input.json csl_ |                             \
+        diff --ignore-all-space -q                                  \
+        - test/expect.json                                          \
         && echo "Test passed." || echo "failed."
   ;;
   *)
