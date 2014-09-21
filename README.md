@@ -1,10 +1,19 @@
 # Jenv `/d͡ʒˈɪnv/`
 Version v0.1 
 
-Super simple tool to replace JSON values with Environment Variables. I needed for Docker and a reason to do brush up my ancient and super rusty C skills.
+Super simple tool to replace JSON values with Environment Variables. 
 
 
-# Usage:
+### Why?
+
+When using dockers, I always ended up writing bash scripts to edit json files on the run,
+it was tedious and ugly, so I decied to brush up my rusty C skills and write this.
+
+###### Why C?
+speed efficiency and small binary footprint and no dependency. That is all.
+
+
+### Usage:
 
 ```sh
 $ jenv 
@@ -23,7 +32,7 @@ Prefix:    The env prefix that holds replacement values.
 Output:    The result is printed to standard output.
 
 ```
-## Example:
+### Example:
 
 ```sh
 $ cat example.json 
@@ -70,13 +79,13 @@ $ csl_can='{ "handle": ["array", "here"], "param": true }' \
 $ 
 ```
 
-# Building
+### Building
 
-## Dependencies
-* libc
-Yup, that is it.
+#### Dependencies
+##### 1. libc.
+Yup, that is all.
 
-## How?
+#### How?
 just run 
 ```sh
 $ ./builder build && ./builder install
@@ -88,17 +97,14 @@ $ ./builder build && ./builder install
 There is a flimsy test for now, just run `./builder test`.
 
 
-# Limitations
+### Limitations
 
 jenv isn't a complete JSON parser, it simply helps replace root nodes using environment variables.
 However, it dose not chock on nested `objects` or `arrays` and can hanlde escaping.
 
-# Caveat
+### Caveat
 
 You _cannot_ read from a file and write to it in the same pipeline. So this is not possible:
-
-### Problem: 
-
 ```sh
 $ #Bad example. This won't work. 
 $ jsenv config/app.json my_prefix > config/app.json
@@ -109,7 +115,7 @@ Read more on [File Redirection](http://mywiki.wooledge.org/BashGuide/InputAndOut
 
 > [*sponge(1)](http://man.cx/sponge) is part of [moreutials](https://joeyh.name/code/moreutils/).
 
-### Solution:
+##### Solution:
   Consider using _template files_ this also means that unprocessed json files are never servered to your services.
   And you can easily chose want should be processed by prefixing it.
 
@@ -130,5 +136,5 @@ $ rm config/*.jenv #optionally delete _templates_.
 ```
 
 
-# Contribution
+### Contribution
 Just send me a pull request or if it is design change or adding features you could consider openning an issue first.
