@@ -112,10 +112,11 @@ int main(int argc, char **argv, char **envp)
       replace_node_value(json, filesize, key, key_len, value, value_len);
     }
 
-NEXT:
+    NEXT:
     ; //Stop label at end of compound statement error. /* */
   }
   printf(json);
+  free(json);
 
   return 0;
 }

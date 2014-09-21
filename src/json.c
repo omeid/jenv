@@ -12,113 +12,119 @@ const char node_closing_tag(char tag) {
       return '}';
     case '[':
       return ']';
+    default:
+      return ','; //For premative types.
   }
 }
 
 
-void replace_node_value(char *json, const int json_size, const char *key, const int key_len, const char *value, const int value_len){
+void replace_node_value(char *json, int json_size, const char *key, const int key_len, const char *value, const int value_len){
+
+  char *new_json; //The result.
 
   if(key_len > json_size) return;
 
-  char *new_json;
 
   for(int j = 0; j < json_size; j++){
-    int k = 0;
-    int v_start = 0;
-    int v_end = 0;
+    //j               //  json cursor
+    int k = 0;        //  key  cursor
+    int v_start = 0;  //  the start point of old value in json
+    int v_end = 0;    //  the end   point of old value in json
 
     //Lets find the key.
     if(!(json[j] == '"' && json[j+1] == key[k])) continue;
 
-    j++; //Previous line: for j and k where json[j+1] == key[k] then json[j] != key[k] is true;
+    j++; //step over start of the key.
 
+    // Step until matching key.
+    while(key[++k] == json[++j]);
 
-    //walk the key
-    while(key[k] == json[j]){
-      k++; j++;
-    }
+    //if size missmatch, next.
+    if(k != key_len) continue;
 
-    //Is this really the key you want?
-    if(k == key_len && json[j] == '\"') {
-      while(isspace(json[j++]));   // Escape '"' and then any whitespace.
-      if(json[j] != ':') continue; // Expect colon.
-      while(isspace(json[++j]));   // Escape ':' and then any whitespace.
+    //if Key is longer than needle, next.
+    if(json[j] != '"') continue;
 
-      char v_opening_tag = json[j]; //Don't care about grand-childern now.
-      char v_closing_tag = node_closing_tag(v_opening_tag);
+    // Step over '"' and then any whitespace.
+    while(isspace(json[++j]));
 
-      v_start = j;
+    //if not a colon, next.
+    if(json[j] != ':') continue;
 
-      int inception = 0; // Target object nested items housekeeping.
-                         // Only objects of the same type.
-                         // Doesn't apply to "string".
+    // Step over ':' and then any whitespace.
+    while(isspace(json[++j]));
 
-      bool is_string = false;
+    char v_opening_tag = json[j];
+    char v_closing_tag = node_closing_tag(v_opening_tag);
 
-      while(json[j++]) {
+    v_start = j;
 
-        const char c = json[j];
+    int inception = 0; // Target object nested items book-keeping.
+                       // Only objects of the same type.
+                       // Doesn't apply to "string".
 
-        if(c == '"' &&  c != v_closing_tag) is_string = !is_string;
-        
-        if(is_string) continue;
+    bool is_string = false;
 
-        if(c == '\\'){
-          const char n = json[j+1];
-          
-          if(n == 'u') {
-            j = j+4;
-            continue;
-          }
+    while(json[j++]) {
 
-          /* We don't care for other cases.
-          if(
-              n  == '"'  ||  
-              n  == '\\' ||
-              n  == '/'  ||
-              n  == 'b'  ||
-              n  == 'f'  ||
-              n  == 'n'  ||
-              n  == 'r'  ||
-              n  == 't'
-            ) 
-          { */
+      const char c = json[j];
 
-            j++; //Just escape next char.
-            continue;
-           /*
-           }
-           */
+      //If we see an unescaped '"' and our value type isn't string
+      // We are now entering or leaving a string.
+      if(json[j-1] != '\\' && c == '"' &&  c != v_closing_tag) is_string = !is_string;
 
-        }
+      //If we are within a string, the value doesn't matter, next.
+      if(is_string) continue;
 
-        if(c != '"' && c == v_opening_tag){
-          inception++;
-          continue;
-        }
-
-        if(c == v_closing_tag){
-          if(inception) {
-            inception--;
-            continue;
-          }
-          v_end = j + 1;
-          break;
-        }
+      //Handle escaping.
+      if(c == '\\'){
+        // Simplified:
+        //if \u step 4 char for unicode as per spec, else just one char.
+        j += json[j+1] == 'u' ? 4 : 1;
+        continue;
       }
 
-      int new_size = json_size - v_end + v_start + value_len;
-      new_json = malloc(new_size);
-      if(new_json == NULL) {
-        Fatal("Can't allocate memory.");
-      };
+      //If we see another another opening tag, it is a nested element,
+      //do book keeping then next.
+      // c != '"' because strings can't be nested.
+      if(c != '"' && c == v_opening_tag) {
+          inception++;
+          continue;
+      }
 
-      strncpy(new_json, json, v_start);
-      strcat(new_json, value);
-      strcat(new_json, json+v_end);
 
-      strcpy(json, new_json);
+      if(c == v_closing_tag){
+        //if we are not withing a nested item
+        //this is the end of the value, break out.
+        if(!inception) break;
+
+        //We are out of a nested item.
+        inception--;
+      }
+
     }
+
+    //If not a premative type, step over the closing tag.
+    if(v_closing_tag != ',') ++j;
+
+    //For clearity and consistency with v_start.
+    v_end = j;
+
+    //Make the new size: before old value + new value + after old value.
+    int new_size = v_start + value_len + (json_size - v_end);
+
+    new_json = malloc(new_size);
+    if(new_json == NULL) {
+      Fatal("Can't allocate memory.");
+    };
+
+
+    strncpy(new_json, json, v_start); //before old value
+    strcat(new_json, value);          //new value
+    strcat(new_json, json+v_end);     // after old value
+
+    strcpy(json, new_json);
+
   }
   return;
 };

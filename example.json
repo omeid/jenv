@@ -1,7 +1,7 @@
 {
   "node_name": "hub",
   "datacenter": "dc1",
-  "domain": "local.microcloud.io",
+  "domain": "dc1.local.microcloud.io",
   "server": true,
   "bootstrap": true,
   "data_dir": "/consul-data",

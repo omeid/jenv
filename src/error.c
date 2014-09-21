@@ -1,6 +1,6 @@
 #ifndef ERROR_FATAL_H
 #define ERROR_FATAL_H
- 
+
 
 #include <stdarg.h> 
 #include <stdio.h>
