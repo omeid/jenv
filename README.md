@@ -102,11 +102,12 @@ You _cannot_ read from a file and write to it in the same pipeline. So this is n
 ```sh
 $ #Bad example. This won't work. 
 $ jsenv config/app.json my_prefix > config/app.json
-$
-$ # Nor will this or any other combination. Except [sponage from moreutials](http://manpages.debian.org/cgi-bin/man.cgi?query=sponge)
+$ # Nor will this or any other combination. Except sponge(1)*
 $ jsenv config/app.json | tee config/app.json
 ```
 Read more on [File Redirection](http://mywiki.wooledge.org/BashGuide/InputAndOutput#File_Redirection) and this [Pitiful specifically](http://mywiki.wooledge.org/BashPitfalls#cat_file_.7C_sed_s.2Ffoo.2Fbar.2F_.3E_file).
+
+> [*sponge(1)](http://man.cx/sponge) is part of [moreutials](https://joeyh.name/code/moreutils/).
 
 ### Solution:
   Consider using _template files_ this also means that unprocessed json files are never servered to your services.
@@ -118,7 +119,7 @@ $ ls config
 app.json.jenv consul.json.jenv
 
 $ for json in config/*.jenv; do
-> jenv $js cnsl_ > ${js%%\.jenv};
+> jenv $js prefix_ > ${js%%\.jenv};
 > done;
 $ ls *
 
