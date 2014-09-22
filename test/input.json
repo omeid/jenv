@@ -12,7 +12,7 @@
     "http": 3000
   },
   "can": {
-    "handle": { "nested": ["items", 2] }
+    "handle": { "nested": ["items", {"two" : "even this"} ] }
   }
 }
 

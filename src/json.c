@@ -77,9 +77,10 @@ void replace_node_value(char *json, int json_size, const char *key, const int ke
 
       const char c = json[j];
 
+      bool closing = (c == v_closing_tag);
       //If we see an unescaped '"' and that isn't our closing tag
       // and it isn't escaped we are now entering or leaving a string.
-      if(c == '"' &&  c != v_closing_tag && json[j-1] != '\\' ) is_string = !is_string;
+      if(c == '"' &&  !closing && json[j-1] != '\\' ) is_string = !is_string;
 
       //If we are within a string, the value doesn't matter, next.
       //for backslash, escape the next one too.
@@ -88,7 +89,10 @@ void replace_node_value(char *json, int json_size, const char *key, const int ke
       //if we see a closing tag and are not 
       // withing a nested item
       //this is the end of the value, break out.
-      if(c == v_closing_tag && --inception) break;
+      if(closing && !inception) break;
+
+      //if we see an opening tag do book keeping. 
+      if(closing && inception) inception--;
 
       //If we see another another opening tag, it is a nested element,
       //do book keeping then next.
