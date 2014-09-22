@@ -98,10 +98,8 @@ int main(int argc, char **argv, char **envp)
     //if key is smaller than prefix, escape.
     if(key_len < prefix_len) continue;
 
-
-    for(int i = 0; i < prefix_len; i++) {
-      if(key_prefixed[i] != prefix[i]) goto NEXT;
-    }
+    if(strncmp(key_prefixed, prefix, prefix_len) != 0) continue;
+  
 
     //Create a scope to avoid 'goto' jump into
     //a scope with "undefined" vars.
@@ -115,11 +113,9 @@ int main(int argc, char **argv, char **envp)
       int value_len = strlen(value); //Just for consistency.
       replace_node_value(json, filesize, key, key_len, value, value_len);
     }
-
-    NEXT:
-    ; //Stop label at end of compound statement error. /* */
   }
   printf(json);
+  json = 0; //avoid double free problem.
   free(json);
 
   return 0;
