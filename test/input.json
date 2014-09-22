@@ -7,12 +7,14 @@
   "data_dir": "/consul-data",
   "log_level": "INFO",
   "client_addr": "0.0.0.0",
+  "data": "\"Good.\" she said.",
   "ports": {
     "dns": 53,
     "http": 3000
   },
   "can": {
-    "handle": { "nested": ["items", {"two" : "even this"} ] }
-  }
+    "handle": { "nested": ["items", {"two" : "ev[en this}"} ] }
+  },
+  "key": "key_name"
 }
 

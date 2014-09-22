@@ -67,7 +67,7 @@ void replace_node_value(char *json, int json_size, const char *key, const int ke
     // Target object nested items book-keeping.
     // Only objects of the same type.
     // Doesn't apply to "string".
-    int inception = 0;
+    unsigned int inception = 0;
 
     // string flag, to keep track
     // of when we are within a string value.
@@ -76,26 +76,29 @@ void replace_node_value(char *json, int json_size, const char *key, const int ke
     while(json[j++]) {
 
       const char c = json[j];
+      //If it is a backslash, escape next one too.
+      if(c == '\\' && j++) continue;
 
       bool closing = (c == v_closing_tag);
-      //If we see an unescaped '"' and that isn't our closing tag
-      // and it isn't escaped we are now entering or leaving a string.
-      if(c == '"' &&  !closing && json[j-1] != '\\' ) is_string = !is_string;
 
+      //If we see a '"' and that isn't our closing tag
+      // we are now entering or leaving a string.
+      if(c == '"' &&  !closing) is_string = !is_string;
+      
       //If we are within a string, the value doesn't matter, next.
-      //for backslash, escape the next one too.
-      if(is_string || c == '\\' && j++) continue;
+      if(is_string) continue;
 
       //if we see a closing tag and are not 
       // withing a nested item
       //this is the end of the value, break out.
       if(closing && !inception) break;
 
-      //if we see an opening tag do book keeping. 
-      if(closing && inception) inception--;
+      //if we see a closing tag and within a child
+      // step out.
+      if(closing) inception--;
 
       //If we see another another opening tag, it is a nested element,
-      //do book keeping then next.
+      //step in.
       if(c == v_opening_tag) inception++;
 
     }
