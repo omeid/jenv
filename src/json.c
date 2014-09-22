@@ -42,15 +42,20 @@ void replace_node_value(char *json, int json_size, const char *key, const int ke
     //if size missmatch, next.
     if(k != key_len) continue;
 
-    //if Key is longer than needle, next.
+    //if not end of the key, that means 
+    // Key is longer than needle, next.
     if(json[j] != '"') continue;
 
-    // Step over '"' and then any whitespace.
+    // Step over the closing tag: " 
+    // and then any whitespace.
     while(isspace(json[++j]));
 
-    //if not a colon, next.
+    // if not a colon,
+    // Most probably we found a value
+    // that is equal to our key, next.
     if(json[j] != ':') continue;
 
+    // Found the key.
     // Step over ':' and then any whitespace.
     while(isspace(json[++j]));
 
@@ -59,48 +64,35 @@ void replace_node_value(char *json, int json_size, const char *key, const int ke
 
     v_start = j;
 
-    int inception = 0; // Target object nested items book-keeping.
+    // Target object nested items book-keeping.
     // Only objects of the same type.
     // Doesn't apply to "string".
+    int inception = 0;
 
+    // string flag, to keep track
+    // of when we are within a string value.
     bool is_string = false;
 
     while(json[j++]) {
 
       const char c = json[j];
 
-      //If we see an unescaped '"' and our value type isn't string
-      // We are now entering or leaving a string.
-      if(json[j-1] != '\\' && c == '"' &&  c != v_closing_tag) is_string = !is_string;
+      //If we see an unescaped '"' and that isn't our closing tag
+      // and it isn't escaped we are now entering or leaving a string.
+      if(c == '"' &&  c != v_closing_tag && json[j-1] != '\\' ) is_string = !is_string;
 
       //If we are within a string, the value doesn't matter, next.
-      if(is_string) continue;
+      //for backslash, escape the next one too.
+      if(is_string || c == '\\' && j++) continue;
 
-      //Handle escaping.
-      if(c == '\\'){
-        // Simplified:
-        //if \u step 4 char for unicode as per spec, else just one char.
-        j += json[j+1] == 'u' ? 4 : 1;
-        continue;
-      }
+      //if we see a closing tag and are not 
+      // withing a nested item
+      //this is the end of the value, break out.
+      if(c == v_closing_tag && --inception) break;
 
       //If we see another another opening tag, it is a nested element,
       //do book keeping then next.
-      // c != '"' because strings can't be nested.
-      if(c != '"' && c == v_opening_tag) {
-        inception++;
-        continue;
-      }
-
-
-      if(c == v_closing_tag){
-        //if we are not withing a nested item
-        //this is the end of the value, break out.
-        if(!inception) break;
-
-        //We are out of a nested item.
-        inception--;
-      }
+      if(c == v_opening_tag) inception++;
 
     }
 
@@ -126,6 +118,4 @@ void replace_node_value(char *json, int json_size, const char *key, const int ke
     strcpy(json, new_json);
 
   }
-  return;
 };
-
