@@ -124,5 +124,7 @@ void replace_node_value(char *json, int json_size, const char *key, const int ke
 
     strcpy(json, new_json);
 
+    new_json = NULL;
+    free(new_json);
   }
 };
