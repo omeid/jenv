@@ -10,7 +10,7 @@ When using dockers, I always ended up writing bash scripts to edit json files on
 it was tedious and ugly, so I decied to brush up my rusty C skills and write this.
 
 ###### Why C?
-speed efficiency and small binary footprint and no dependency. That is all.
+speed, Efficiency, small binary footprint, and no dependency. That is just about it.
 
 
 ### Usage:
