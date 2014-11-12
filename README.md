@@ -100,7 +100,7 @@ There is a flimsy test for now, just run `./builder test`.
 ### Limitations
 
 jenv isn't a complete JSON parser, it simply helps replace root nodes using environment variables.
-However, it dose not chock on nested `objects` or `arrays` and can hanlde escaping.
+However, it dose not chock on nested `objects` or `arrays` and can handle escaping.
 
 ### Caveat
 
