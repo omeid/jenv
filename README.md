@@ -118,8 +118,8 @@ Read more on [File Redirection](http://mywiki.wooledge.org/BashGuide/InputAndOut
 
          
 #### Solution:
-  Consider using _template files_ this also means that unprocessed json files are never servered to your services.
-  And you can easily chose what should be processed.
+  Consider using _template files_ this also means that unprocessed json files are never served to your services.
+  And you can easily choose what should be processed.
 
   Example:
 ```sh
@@ -140,4 +140,4 @@ You can of course, use any other suffix instead of `.jenv`.
 
 
 ### Contribution
-Just send me a pull request or if it is design change or adding features you could consider openning an issue first.
+Just send me a pull request or if it is a design change or adding features you could consider openning an issue first.
